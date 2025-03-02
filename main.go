@@ -21,6 +21,11 @@ const (
 	brickRows    = 5
 	brickCols    = 10
 	brickGap     = 4
+	paddleSpeed  = 5
+	ballSpeed    = 3
+	paddleY      = screenHeight - 40
+	ballStartY   = screenHeight - 60
+	brickOffset  = 40
 )
 
 type Game struct {
@@ -42,16 +47,16 @@ type ball struct {
 
 type brick struct {
 	x, y, width, height float64
-	active             bool
-	color              color.Color
-	score              int
+	active              bool
+	color               color.Color
+	score               int
 }
 
 func (g *Game) init() {
 	// Initialize paddle
 	g.paddle = paddle{
 		x:      screenWidth/2 - paddleWidth/2,
-		y:      screenHeight - 40,
+		y:      paddleY,
 		width:  paddleWidth,
 		height: paddleHeight,
 	}
@@ -59,31 +64,35 @@ func (g *Game) init() {
 	// Initialize ball
 	g.ball = ball{
 		x:    screenWidth / 2,
-		y:    screenHeight - 60,
-		dx:   3,
-		dy:   -3,
+		y:    ballStartY,
+		dx:   ballSpeed,
+		dy:   -ballSpeed,
 		size: ballSize,
 	}
 
-	// Rainbow colors and scores for the bricks
+	// Initialize bricks
+	g.initBricks()
+	g.initialized = true
+}
+
+func (g *Game) initBricks() {
 	brickConfig := []struct {
 		color color.Color
 		score int
 	}{
-		{color.RGBA{0xff, 0x00, 0x00, 0xff}, 50}, // Red (top row) - highest score
+		{color.RGBA{0xff, 0x00, 0x00, 0xff}, 50}, // Red
 		{color.RGBA{0xff, 0x7f, 0x00, 0xff}, 40}, // Orange
 		{color.RGBA{0xff, 0xff, 0x00, 0xff}, 30}, // Yellow
 		{color.RGBA{0x00, 0xff, 0x00, 0xff}, 20}, // Green
-		{color.RGBA{0x00, 0x00, 0xff, 0xff}, 10}, // Blue (bottom row) - lowest score
+		{color.RGBA{0x00, 0x00, 0xff, 0xff}, 10}, // Blue
 	}
 
-	// Initialize bricks
 	g.bricks = make([]brick, 0, brickRows*brickCols)
 	for row := 0; row < brickRows; row++ {
 		for col := 0; col < brickCols; col++ {
 			g.bricks = append(g.bricks, brick{
 				x:      float64(col*(brickWidth+brickGap) + brickGap),
-				y:      float64(row*(brickHeight+brickGap) + brickGap + 40),
+				y:      float64(row*(brickHeight+brickGap) + brickGap + brickOffset),
 				width:  brickWidth,
 				height: brickHeight,
 				active: true,
@@ -92,8 +101,6 @@ func (g *Game) init() {
 			})
 		}
 	}
-
-	g.initialized = true
 }
 
 func (g *Game) Update() error {
@@ -112,10 +119,10 @@ func (g *Game) Update() error {
 
 	// Update paddle position based on input
 	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
-		g.paddle.x -= 5
+		g.paddle.x -= paddleSpeed
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyRight) {
-		g.paddle.x += 5
+		g.paddle.x += paddleSpeed
 	}
 
 	// Keep paddle within screen bounds
@@ -204,4 +211,4 @@ func main() {
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
 	}
-} 
+}
