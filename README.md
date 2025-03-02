@@ -1,6 +1,9 @@
 # Breakout Game in Go
 
-A classic Breakout game implementation in Go using the Ebitengine game library. Break all the bricks to win, but don't let the ball fall below your paddle!
+A classic Breakout game implementation in Go using the Ebitengine game library.
+Break all the bricks to win, but don't let the ball fall below your paddle!
+
+![image](./play.png)
 
 ## Game Features
 
@@ -16,13 +19,13 @@ A classic Breakout game implementation in Go using the Ebitengine game library. 
 
 ### System Dependencies
 
-#### For macOS:
+#### For macOS
 
 ```sh
 brew install go
 ```
 
-#### For Linux (Ubuntu/Debian):
+#### For Linux (Ubuntu/Debian)
 
 ```sh
 sudo apt-get update
@@ -30,10 +33,12 @@ sudo apt-get install golang-go
 sudo apt-get install libgl1-mesa-dev xorg-dev
 ```
 
-#### For Windows:
+#### For Windows
 
 1. Download and install Go from [golang.org](https://golang.org/dl/)
-2. Install GCC (required for Ebitengine) via [MinGW](http://mingw-w64.org/doku.php) or [MSYS2](https://www.msys2.org/)
+2. Install GCC (required for Ebitengine) via [MinGW](http://mingw-w64.org/doku.php)
+
+or [MSYS2](https://www.msys2.org/)
 
 ## How to Run
 
