@@ -7,6 +7,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 const (
@@ -94,15 +95,15 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	// Draw paddle
-	ebitenutil.DrawRect(screen, g.paddle.x, g.paddle.y, g.paddle.width, g.paddle.height, color.White)
+	vector.DrawFilledRect(screen, g.paddle.x, g.paddle.y, g.paddle.width, g.paddle.height, color.White, true)
 
 	// Draw ball
-	ebitenutil.DrawRect(screen, g.ball.x, g.ball.y, g.ball.size, g.ball.size, color.White)
+	vector.DrawFilledRect(screen, g.ball.x, g.ball.y, g.ball.size, g.ball.size, color.White, true)
 
 	// Draw bricks
 	for _, brick := range g.bricks {
 		if brick.active {
-			ebitenutil.DrawRect(screen, brick.x, brick.y, brick.width, brick.height, brick.color)
+			vector.DrawFilledRect(screen, brick.x, brick.y, brick.width, brick.height, brick.color, true)
 		}
 	}
 
