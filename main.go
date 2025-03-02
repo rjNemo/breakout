@@ -16,16 +16,9 @@ const (
 	paddleHeight = 12
 	paddleWidth  = 60
 	ballSize     = 8
-	brickWidth   = 60
-	brickHeight  = 20
-	brickRows    = 5
-	brickCols    = 10
-	brickGap     = 4
-	paddleSpeed  = 5
 	ballSpeed    = 3
 	paddleY      = screenHeight - 40
 	ballStartY   = screenHeight - 60
-	brickOffset  = 40
 )
 
 type Game struct {
@@ -43,13 +36,6 @@ type paddle struct {
 
 type ball struct {
 	x, y, dx, dy, size float64
-}
-
-type brick struct {
-	x, y, width, height float64
-	active              bool
-	color               color.Color
-	score               int
 }
 
 func (g *Game) init() {
@@ -71,36 +57,8 @@ func (g *Game) init() {
 	}
 
 	// Initialize bricks
-	g.initBricks()
+	g.bricks = initBricks()
 	g.initialized = true
-}
-
-func (g *Game) initBricks() {
-	brickConfig := []struct {
-		color color.Color
-		score int
-	}{
-		{color.RGBA{0xff, 0x00, 0x00, 0xff}, 50}, // Red
-		{color.RGBA{0xff, 0x7f, 0x00, 0xff}, 40}, // Orange
-		{color.RGBA{0xff, 0xff, 0x00, 0xff}, 30}, // Yellow
-		{color.RGBA{0x00, 0xff, 0x00, 0xff}, 20}, // Green
-		{color.RGBA{0x00, 0x00, 0xff, 0xff}, 10}, // Blue
-	}
-
-	g.bricks = make([]brick, 0, brickRows*brickCols)
-	for row := 0; row < brickRows; row++ {
-		for col := 0; col < brickCols; col++ {
-			g.bricks = append(g.bricks, brick{
-				x:      float64(col*(brickWidth+brickGap) + brickGap),
-				y:      float64(row*(brickHeight+brickGap) + brickGap + brickOffset),
-				width:  brickWidth,
-				height: brickHeight,
-				active: true,
-				color:  brickConfig[row].color,
-				score:  brickConfig[row].score,
-			})
-		}
-	}
 }
 
 func (g *Game) Update() error {
