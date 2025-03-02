@@ -43,6 +43,7 @@ type ball struct {
 type brick struct {
 	x, y, width, height float64
 	active             bool
+	color              color.Color
 }
 
 func (g *Game) init() {
@@ -63,6 +64,15 @@ func (g *Game) init() {
 		size: ballSize,
 	}
 
+	// Rainbow colors for the bricks
+	rainbowColors := []color.Color{
+		color.RGBA{0xff, 0x00, 0x00, 0xff}, // Red
+		color.RGBA{0xff, 0x7f, 0x00, 0xff}, // Orange
+		color.RGBA{0xff, 0xff, 0x00, 0xff}, // Yellow
+		color.RGBA{0x00, 0xff, 0x00, 0xff}, // Green
+		color.RGBA{0x00, 0x00, 0xff, 0xff}, // Blue
+	}
+
 	// Initialize bricks
 	g.bricks = make([]brick, 0, brickRows*brickCols)
 	for row := 0; row < brickRows; row++ {
@@ -73,6 +83,7 @@ func (g *Game) init() {
 				width:  brickWidth,
 				height: brickHeight,
 				active: true,
+				color:  rainbowColors[row],
 			})
 		}
 	}
@@ -165,7 +176,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// Draw bricks
 	for _, brick := range g.bricks {
 		if brick.active {
-			ebitenutil.DrawRect(screen, brick.x, brick.y, brick.width, brick.height, color.RGBA{0xff, 0x40, 0x40, 0xff})
+			ebitenutil.DrawRect(screen, brick.x, brick.y, brick.width, brick.height, brick.color)
 		}
 	}
 
