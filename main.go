@@ -13,11 +13,8 @@ import (
 const (
 	screenWidth  = 640
 	screenHeight = 480
-	paddleHeight = 12
-	paddleWidth  = 60
 	ballSize     = 8
 	ballSpeed    = 3
-	paddleY      = screenHeight - 40
 	ballStartY   = screenHeight - 60
 )
 
@@ -30,22 +27,13 @@ type Game struct {
 	initialized bool
 }
 
-type paddle struct {
-	x, y, width, height float64
-}
-
 type ball struct {
 	x, y, dx, dy, size float64
 }
 
 func (g *Game) init() {
 	// Initialize paddle
-	g.paddle = paddle{
-		x:      screenWidth/2 - paddleWidth/2,
-		y:      paddleY,
-		width:  paddleWidth,
-		height: paddleHeight,
-	}
+	g.paddle = newPaddle()
 
 	// Initialize ball
 	g.ball = ball{
@@ -77,19 +65,14 @@ func (g *Game) Update() error {
 
 	// Update paddle position based on input
 	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
-		g.paddle.x -= paddleSpeed
+		g.paddle.moveLeft()
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyRight) {
-		g.paddle.x += paddleSpeed
+		g.paddle.moveRight()
 	}
 
 	// Keep paddle within screen bounds
-	if g.paddle.x < 0 {
-		g.paddle.x = 0
-	}
-	if g.paddle.x > screenWidth-g.paddle.width {
-		g.paddle.x = screenWidth - g.paddle.width
-	}
+	g.paddle.keepWithinBounds()
 
 	// Update ball position
 	g.ball.x += g.ball.dx
