@@ -3,7 +3,6 @@ package main
 import (
 	"image/color"
 	"log"
-	"math/rand"
 	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -13,9 +12,6 @@ import (
 const (
 	screenWidth  = 640
 	screenHeight = 480
-	ballSize     = 8
-	ballSpeed    = 3
-	ballStartY   = screenHeight - 60
 )
 
 type Game struct {
@@ -27,22 +23,12 @@ type Game struct {
 	initialized bool
 }
 
-type ball struct {
-	x, y, dx, dy, size float64
-}
-
 func (g *Game) init() {
 	// Initialize paddle
 	g.paddle = newPaddle()
 
 	// Initialize ball
-	g.ball = ball{
-		x:    screenWidth / 2,
-		y:    ballStartY,
-		dx:   ballSpeed,
-		dy:   -ballSpeed,
-		size: ballSize,
-	}
+	g.ball = newBall()
 
 	// Initialize bricks
 	g.bricks = initBricks()
@@ -75,26 +61,13 @@ func (g *Game) Update() error {
 	g.paddle.keepWithinBounds()
 
 	// Update ball position
-	g.ball.x += g.ball.dx
-	g.ball.y += g.ball.dy
+	g.ball.updatePosition()
 
 	// Ball collision with walls
-	if g.ball.x <= 0 || g.ball.x >= screenWidth-g.ball.size {
-		g.ball.dx = -g.ball.dx
-	}
-	if g.ball.y <= 0 {
-		g.ball.dy = -g.ball.dy
-	}
+	g.ball.checkWallCollision()
 
 	// Ball collision with paddle
-	if g.ball.y+g.ball.size >= g.paddle.y &&
-		g.ball.x+g.ball.size >= g.paddle.x &&
-		g.ball.x <= g.paddle.x+g.paddle.width &&
-		g.ball.y <= g.paddle.y+g.paddle.height {
-		g.ball.dy = -g.ball.dy
-		// Add some randomness to the ball direction
-		g.ball.dx += (rand.Float64()*2 - 1) * 0.5
-	}
+	g.ball.checkPaddleCollision(g.paddle)
 
 	// Ball collision with bricks
 	for i := range g.bricks {
