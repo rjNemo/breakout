@@ -22,6 +22,7 @@ type Game struct {
 	score       int
 	gameOver    bool
 	initialized bool
+	victory     bool
 }
 
 func (g *Game) init() {
@@ -79,6 +80,16 @@ func (g *Game) Update() error {
 		g.gameOver = true
 	}
 
+	// Check for victory condition
+	victory := true
+	for _, brick := range g.bricks {
+		if brick.active {
+			victory = false
+			break
+		}
+	}
+	g.victory = victory
+
 	return nil
 }
 
@@ -94,10 +105,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	// Draw score and game over text
-	if g.gameOver {
+	if g.victory {
+		ebitenutil.DebugPrint(screen, "Victory! Press SPACE to restart")
+	} else if g.gameOver {
 		ebitenutil.DebugPrint(screen, "Game Over! Press SPACE to restart")
+	} else {
+		ebitenutil.DebugPrint(screen, "Score: "+strconv.Itoa(g.score))
 	}
-	ebitenutil.DebugPrint(screen, "Score: "+strconv.Itoa(g.score))
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
