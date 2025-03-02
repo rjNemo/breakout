@@ -25,13 +25,8 @@ type Game struct {
 }
 
 func (g *Game) init() {
-	// Initialize paddle
 	g.paddle = newPaddle()
-
-	// Initialize ball
 	g.ball = newBall()
-
-	// Initialize bricks
 	g.bricks = initBricks()
 	g.initialized = true
 }
@@ -58,16 +53,11 @@ func (g *Game) Update() error {
 		g.paddle.moveRight()
 	}
 
-	// Keep paddle within screen bounds
 	g.paddle.keepWithinBounds()
-
-	// Update ball position
 	g.ball.updatePosition()
 
-	// Ball collision with walls
 	g.ball.checkWallCollision()
 
-	// Ball collision with paddle
 	g.ball.checkPaddleCollision(g.paddle)
 
 	// Ball collision with bricks
@@ -85,7 +75,6 @@ func (g *Game) Update() error {
 		}
 	}
 
-	// Check for game over
 	if g.ball.y > screenHeight {
 		g.gameOver = true
 	}
@@ -94,13 +83,10 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	// Draw paddle
 	vector.DrawFilledRect(screen, g.paddle.x, g.paddle.y, g.paddle.width, g.paddle.height, color.White, true)
 
-	// Draw ball
 	vector.DrawFilledRect(screen, g.ball.x, g.ball.y, g.ball.size, g.ball.size, color.White, true)
 
-	// Draw bricks
 	for _, brick := range g.bricks {
 		if brick.active {
 			vector.DrawFilledRect(screen, brick.x, brick.y, brick.width, brick.height, brick.color, true)
