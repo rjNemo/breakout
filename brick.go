@@ -33,8 +33,8 @@ func initBricks() []brick {
 	}
 
 	bricks := make([]brick, 0, brickRows*brickCols)
-	for row := 0; row < brickRows; row++ {
-		for col := 0; col < brickCols; col++ {
+	for row := range brickRows {
+		for col := range brickCols {
 			bricks = append(bricks, brick{
 				x:      float32(col*(brickWidth+brickGap) + brickGap),
 				y:      float32(row*(brickHeight+brickGap) + brickGap + brickOffset),

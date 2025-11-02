@@ -94,13 +94,13 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	vector.DrawFilledRect(screen, g.paddle.x, g.paddle.y, g.paddle.width, g.paddle.height, color.White, true)
+	vector.FillRect(screen, g.paddle.x, g.paddle.y, g.paddle.width, g.paddle.height, color.White, true)
 
-	vector.DrawFilledRect(screen, g.ball.x, g.ball.y, g.ball.size, g.ball.size, color.White, true)
+	vector.FillRect(screen, g.ball.x, g.ball.y, g.ball.size, g.ball.size, color.White, true)
 
 	for _, brick := range g.bricks {
 		if brick.active {
-			vector.DrawFilledRect(screen, brick.x, brick.y, brick.width, brick.height, brick.color, true)
+			vector.FillRect(screen, brick.x, brick.y, brick.width, brick.height, brick.color, true)
 		}
 	}
 
